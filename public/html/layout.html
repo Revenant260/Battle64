@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<title>My Example</title>
+<link rel="stylesheet" href="/css/layout.css">
+<link rel="stylesheet" href="/css/index.css">
+<meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1">
+<body>
+    <header id="pageHeader">
+        <nav id="mainNav">
+            <ul class="nav">
+                <li class="nav"><a href="default.asp">Home</a></li>
+                <li class="nav"><a href="news.asp">News</a></li>
+                <li class="nav"><a href="contact.asp">Contact</a></li>
+                <li class="nav"><a href="about.asp">About</a></li>
+              </ul> 
+        </nav>
+    </header>
+    <article id="mainArticle">
+        <ul class="messages"></ul>
+    </article>
+    <div id="siteAds">
+        <ul class="chathistory"></ul>
+    </div>
+    <footer id="pageFooter">
+        <form>
+            <input type="text" class="input" autocomplete="off" autofocus />
+            <button>Send</button>
+        </form>
+    </footer>
+    <script src="/socket.io/socket.io.js"></script>
+    <script type="text/javascript" src="/js/cindex.js"></script>
+</body>

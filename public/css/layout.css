@@ -1,0 +1,43 @@
+body {
+    display: grid;
+    grid-template-areas:
+        "header header header"
+        "nav article ads"
+        "footer footer footer";
+    grid-template-rows: 120px 1fr 60px;
+    grid-template-columns: 0% 1fr 25%;
+    grid-gap: 2px;
+    height: 100vh;
+    margin: 0;
+    color: white;
+}
+
+#pageHeader {
+    grid-area: header;
+}
+
+#pageFooter {
+    grid-area: footer;
+}
+
+#mainArticle {
+    grid-area: article;
+    overflow-y: scroll;
+}
+
+#mainNav {
+    grid-area: nav;
+}
+
+#siteAds {
+    grid-area: ads;
+}
+
+header,
+footer,
+article,
+nav,
+div {
+    padding: 20px;
+    background: rgb(0, 0, 0);
+}

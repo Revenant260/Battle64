@@ -1,0 +1,87 @@
+body {
+    margin: 0;
+    font-family: sans-serif;
+}
+
+form {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    display: flex;
+    box-sizing: border-box;
+    padding: 0.25rem;
+}
+
+form input {
+    border: 0;
+    padding: 0.5rem;
+    width: 100%;
+    outline: 0;
+    margin-right: 0.5rem;
+    border-radius: 0.25rem;
+    background: #ccc;
+}
+
+form button {
+    width: 6rem;
+    background-color: #1b8c00;
+    color: white;
+    border: none;
+    padding: 0.5rem;
+    cursor: pointer;
+    border-radius: 0.25rem;
+    text-transform: uppercase;
+}
+
+form button:hover {
+    background-color: #166d01;
+}
+
+.messages {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    margin-bottom: 3rem;
+}
+
+.chathistory {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    margin-bottom: 3rem;
+}
+
+.messages li {
+    padding: 0.5rem;
+    background: #838383;
+}
+
+.messages li:nth-child(odd) {
+    background: #525252;
+}
+
+ul.nav {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #333;
+}
+
+li.nav {
+    float: left;
+}
+
+li.nav a {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+/* Change the link color to #111 (black) on hover */
+li.nav a:hover {
+    background-color: #111;
+}
