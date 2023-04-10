@@ -5,31 +5,25 @@ const { createServer } = require('http');
 const app = express();
 const http = createServer(app);
 const io = new Server(http);
-const port = process.env.PORT || 3001;
+const port = process.env.PORT || 3000;
 const path = require('path');
+const io_msg = require('./storage/js/io_msgs.js').io_msg
 app.use('/', express.static(path.join(__dirname, 'public')))
 
 
 app.get("/home", function(req, res) {
+    res.sendFile(__dirname + "/public/html/layout.html");
+});
+
+app.get("/news", function(req, res) {
+    res.sendFile(__dirname + "/public/html/news.html");
+});
+
+app.get("/dev", function(req, res) {
     res.sendFile(__dirname + "/public/html/index.html");
 });
 
-io.on("connection", function(socket) {
-
-    socket.on("user_join", function(data) {
-        this.username = data;
-        socket.broadcast.emit("user_join", data);
-    });
-
-    socket.on("chat_message", function(data) {
-        data.username = this.username;
-        socket.broadcast.emit("chat_message", data);
-    });
-
-    socket.on("disconnect", function(data) {
-        socket.broadcast.emit("user_leave", this.username);
-    });
-});
+io.on("connection", (socket => io_msg(socket)));
 
 http.listen(port, function() {
     console.log("Listening on *:" + port);
