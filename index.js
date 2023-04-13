@@ -5,7 +5,7 @@ const { createServer } = require('http');
 const app = express();
 const http = createServer(app);
 const io = new Server(http);
-const port = process.env.PORT || 3001;
+const port = process.env.PORT || 3000;
 const path = require('path');
 const io_msg = require('./storage/js/io_msgs.js').io_msg
 app.use('/', express.static(path.join(__dirname, 'public')))
