@@ -25,6 +25,19 @@
         <ul class="messages"></ul>
     </article>
     <div id="siteAds">
+        <form id="myForm" class="form-container">
+            <h1>Login</h1>
+        
+            <label for="email"><b>Username</b></label>
+            <input id="username" type="text" placeholder="Enter Username" name="usern" required>
+        
+            <label for="psw"><b>Password</b></label>
+            <input id="pwords" type="password" placeholder="Enter Password" name="psw" required>
+        
+            <button class="btn">Login</button>
+            <button type="button" class="btn cancel" onclick="closeForm()">Close</button>
+          </form>
+          <ul id="dmslink" class="chathistory"></ul>
         <div id="mySidebar" class="sidebar">
             <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
             <a href="#">The Pub</a>
@@ -32,12 +45,11 @@
             <a href="#">PVP</a>
             <a href="#">Raids</a>
         </div>
-        <ul id="dmslink" class="chathistory"></ul>
     </div>
     <footer id="pageFooter">
-        <form>
-            <input type="text" class="input" autocomplete="off" autofocus />
-            <button>Send</button>
+        <form class="ms">
+            <input id="msgs" type="text" class="input" autocomplete="off" autofocus />
+            <button id="myButton">Send</button>
         </form>
     </footer>
     <script src="/socket.io/socket.io.js"></script>

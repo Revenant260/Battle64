@@ -5,7 +5,7 @@ body {
         "nav article ads"
         "footer footer footer";
     grid-template-rows: 140px 1fr 40px;
-    grid-template-columns: 0% 1fr 25%;
+    grid-template-columns: 0% 1fr 26%;
     grid-gap: 2px;
     height: 100vh;
     margin: 0;
@@ -39,6 +39,12 @@ footer,
 article,
 nav,
 div {
-    padding: 5px;
     background: rgb(0, 0, 0);
+}
+
+@media screen and (max-height: 900px) {
+    body {
+        grid-template-rows: 140px 1fr 0px;
+        grid-template-columns: 0% 1fr 0%;
+    }
 }

@@ -1,20 +1,22 @@
 const form = document.querySelector("form");
-const input = document.querySelector(".input");
+const input = document.getElementById("msgs")
 const messages = document.querySelector(".messages");
 const dms = document.querySelector(".chathistory");
-const username = prompt("Please enter a nickname: ", "");
 const socket = io();
+const myButton = document.getElementById("myButton");
+document.getElementById("myForm").style.display = "grid";
+input.setAttribute("disabled", "")
 
-form.addEventListener("submit", function (event) {
-    event.preventDefault();
-    addMessage(username + ": " + input.value);
+myButton.addEventListener("click",  (e) => {
+    e.preventDefault()
+    addMessage(input.value);
     input.value = "";
     messages.lastChild.scrollIntoView({ behavior: 'smooth', block: 'end', inline: 'nearest' })
-    return false;
-}, false);
+    return
+});
 
 socket.on("chat_message", function (data) {
-    addMessage(data.username + ": " + data.message);
+    addMessage( data.message);
 });
 
 socket.on("user_join", function (data) {
@@ -24,9 +26,7 @@ socket.on("user_join", function (data) {
 socket.on("user_leave", function (data) {
     addMessage(data + " has left the chat.");
 });
-
-addMessage("You have joined the chat as '" + username + "'.");
-socket.emit("user_join", username);
+socket.emit("user_join");
 
 function addMessage(message) {
     const li = document.createElement("li");
@@ -39,12 +39,14 @@ function openNav() {
     const li = document.createElement("li");
     li.innerHTML = "Open";
     dms.appendChild(li);
-    document.getElementById("mySidebar").style.width = "300px";
-    document.getElementById("main").style.marginLeft = "300px";
+    document.getElementById("mySidebar").style.width = "25%";
   }
   
   /* Set the width of the sidebar to 0 and the left margin of the page content to 0 */
   function closeNav() {
-    document.getElementById("mySidebar").style.width = "0";
-    document.getElementById("main").style.marginLeft = "0";
+    document.getElementById("mySidebar").style.width = "0%";
   } 
+
+  function closeForm() {
+    document.getElementById("myForm").style.display = "none";
+  }
