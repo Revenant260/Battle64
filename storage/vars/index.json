@@ -1,8 +1,20 @@
 {
   "loactions_db": {
-    "user_loc": "users"
+    "user_loc": "users",
+    "chat_loc": "chats"
   },
   "static": {
-    "var4": "value4"
-  }
+    "room": "shadowlands",
+    "login_rte": "return"
+  },
+  "routes_user": {
+    "login": "user"
+  },
+  "auto_mod": {
+    "welcome": "Welcome to Battle64 beta",
+    "Failed_login": "Failed Login",
+    "New_user": "You must login first before sending msgs",
+    "return_user": "Welcome Back"
+  },
+  "filter": ["nigger", "Nigger", "spam"]
 }

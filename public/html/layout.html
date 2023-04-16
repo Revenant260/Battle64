@@ -14,7 +14,7 @@
                 <li class="nav"><a href="/home">Home</a></li>
                 <li class="nav"><a href="/news">News</a></li>
                 <li class="nav"><a href="/about">About</a></li>
-                <li class="nav"><a href="/dev">Dev Zone</a></li>
+                <li class="nav"><a href="/login">Login</a></li>
                 <li class="navt">
                     <button class="openbtn" onclick="openNav()">&#9776; Teleport</button>
                 </li>
@@ -22,21 +22,9 @@
         </nav>
     </header>
     <article id="mainArticle">
-        <ul class="messages"></ul>
+        <ul id="msgss" class="messages"></ul>
     </article>
     <div id="siteAds">
-        <form id="myForm" class="form-container">
-            <h1>Login</h1>
-        
-            <label for="email"><b>Username</b></label>
-            <input id="username" type="text" placeholder="Enter Username" name="usern" required>
-        
-            <label for="psw"><b>Password</b></label>
-            <input id="pwords" type="password" placeholder="Enter Password" name="psw" required>
-        
-            <button type="submit" class="btn" onclick="login()">Login</button>
-            <button type="button" class="btn cancel" onclick="closeForm()">Close</button>
-          </form>
           <ul id="dmslink" class="chathistory"></ul>
         <div id="mySidebar" class="sidebar">
             <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>

@@ -1,41 +1,37 @@
 const socket = io();
 
-const form = document.querySelector("form");
+const logins = document.getElementById("myForm");
 const input = document.getElementById("msgs")
-const messages = document.querySelector(".messages");
+const messages = document.getElementById("msgss");
 const dms = document.querySelector(".chathistory");
 const myButton = document.getElementById("myButton");
 
-document.getElementById("myForm").style.display = "grid";
-input.setAttribute("disabled", "")
-
-
 myButton.addEventListener("click", (e) => {
     e.preventDefault()
-    addMessage(input.value);
+    socket.emit("chatmsg", input.value)
     input.value = "";
-    messages.lastChild.scrollIntoView({ behavior: 'smooth', block: 'end', inline: 'nearest' })
     return
 });
 
-socket.on("chat_message", function (data) {
-    addMessage(data.message);
-});
-
-socket.on("user__join", function (data) {
-    addMessage(data.user + " just joined the chat!");
-});
-
-socket.on("user_leave", function (data) {
-    addMessage(data + " has left the chat.");
-});
-
-function addMessage(message) {
+socket.on("msg", data => {
     const li = document.createElement("li");
-    li.innerHTML = message;
+    li.innerHTML = data;
     messages.appendChild(li);
+    messages.lastChild.scrollIntoView({ behavior: 'smooth', block: 'end'})
+})
 
-}
+socket.on("chatf", data => {
+    messages.innerHTML = ""
+    data.forEach(ele => {
+        const li = document.createElement("li");
+        li.innerHTML = ele.toString();
+        messages.appendChild(li);
+    });
+})
+
+socket.on('connect', data => {
+    socket.emit("session")
+})
 
 function openNav() {
     const li = document.createElement("li");
@@ -51,14 +47,4 @@ function closeNav() {
 
 function closeForm() {
     document.getElementById("myForm").style.display = "none";
-}
-
-function login() {
-    input.removeAttribute('disabled')
-    const queryString = window.location.search;
-    const urlParams = new URLSearchParams(queryString);
-    const username = urlParams.get('usern');
-    const password = urlParams.get('psw');
-    const users = {"user": username, "pass": password}
-    socket.emit("login", users);
 }

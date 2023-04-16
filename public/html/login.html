@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<title>My Example</title>
+<link rel="stylesheet" href="/css/login.css">
+<link rel="stylesheet" href="/css/index.css">
+
+<body style="background-color: black;">
+    <header id="pageHeader">
+        <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1">
+        <nav id="mainNav">
+            <ul class="nav">
+                <li class="navt">
+                    <h1>Battle Grounds 64</h1>
+                </li>
+                <li class="nav"><a href="/login">Login</a></li>
+            </ul>
+        </nav>
+    </header>
+    <article id="mainArticle">
+        <form id="myForm" class="form-container">
+            <h1>Login</h1>
+
+            <label for="email"><b>Username</b></label>
+            <input id="username" type="text" placeholder="Enter Username" name="usern" required>
+
+            <label for="psw"><b>Password</b></label>
+            <input id="pwords" type="password" placeholder="Enter Password" name="psw" required>
+
+            <button type="button" class="btn" onclick="login()">Login</button>
+        </form>
+        </div>
+    </article>
+    <div id="siteAds">
+        <footer id="pageFooter">
+        </footer>
+        <script src="/socket.io/socket.io.js">
+            const socket = io();
+
+
+
+            function login() {
+                const username = document.getElementsByName("usern")[0].value
+                const password = document.getElementsByName("psw")[0].value
+                const users = { "user": username, "pass": password }
+                input.removeAttribute('disabled')
+                socket.emit("login", users);
+                location.replace('http://174.140.88.174:4000/home')
+            }
+        </script>
+        <script type="text/javascript" src="/js/login.js"></script>
+</body>
