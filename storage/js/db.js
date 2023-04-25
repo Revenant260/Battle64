@@ -1,105 +1,88 @@
 const fs = require('fs');
+const fsPromises = require('fs').promises
 const pot = require('../vars/index.json')
 const path = require('path');
+const active = []
 
-module.exports.login = function (location, data, id) {
-    const directoryPath = path.join(__dirname, `../battle_64/${location}/${id}`)
-    if (!fs.existsSync(directoryPath)) {
-        fs.mkdirSync(directoryPath)
-        var profile = {
-            user: data.user,
-            pass: data.pass,
-            room: pot.static.room,
-            session: Date.now(),
-            ban: []
-        }
-        const send = JSON.stringify(profile)
-        const filePath = path.join(__dirname, `../battle_64/${location}/${id}/${data.user}.json`)
-        const buffer = Buffer.from(JSON.stringify(profile));
+module.exports.login = function (data, id) {
+    var user = userp(data, id)
+    active.push(user.session)
+    var bridge = JSON.stringify(user)
+    return bridge
+}
 
-        fs.writeFile(filePath, buffer, (err) => {
-            if (err) throw err;
-            console.log('The file has been saved!');
-        });
-        return profile
-    } else {
-        const filePath = path.join(__dirname, `../battle_64/${location}/${id}/${data.user}.json`)
-        fs.readFile(filePath, 'utf8', function readFileCallback(err, datas) {
-            var obj = JSON.parse(datas);
-            if (data.pass === obj.pass) {
-                obj.session = Date.now()
-                const buffer = Buffer.from(JSON.stringify(obj));
-                fs.writeFile(filePath, buffer, (err) => {
-                    if (err) throw err;
-                    console.log(obj.user + ` has logged in!`);
-                });
-            }
-        })
+module.exports.session = function (data, id) {
+    var user = JSON.parse(data)
+    if (!active.includes(user.session)) return "Failed login"
+    user.msg = `admin@${user.room}: Welcome ${user.user}`
+    var log = chats(user)
+    user.log = log
+    return user
+}
+
+module.exports.msgs = function (data, id) {
+    var user = JSON.parse(data.use)
+    user.msg = `${user.user}@${user.room}: ${data.msg}`
+    var log = chats(user)
+    return user
+}
+
+
+function chats(data) {
+    var looc = locl(pot.loactions_db.chat_loc, data.room)
+    var dir = path.join(__dirname, looc.chat)
+    if (!fs.existsSync(dir)) {
+        var file = path.join(__dirname, looc.chat)
+        fs.writeFileSync(file, Buffer.from(JSON.stringify([])))
+        return
     }
+    var file = path.join(__dirname, looc.chat)
+    var log = fs.readFileSync(file)
+    var logs = JSON.parse(log)
+    logs.push(data.msg)
+    var file = path.join(__dirname, looc.chat)
+    fs.writeFileSync(file, Buffer.from(JSON.stringify(logs)))
+    return logs
 }
 
-module.exports.session = function (location, data, id) {
-    const directoryPath = path.join(__dirname, `../battle_64/${location}/${id}`)
-    const user = fs.readdirSync(directoryPath)[0].split(".")[0]
-    var filePath = path.join(__dirname, `../battle_64/${location}/${id}/${user}.json`)
-    var file = fs.readFileSync(filePath, 'utf8')
-    var obj = JSON.parse(file);
-    var gate = Date.now() - obj.session
-    if (gate > 1000000) return `[admin@${obj.room}]: Please login to continue`
-    filePath = path.join(__dirname, `../battle_64/${pot.loactions_db.chat_loc}/${obj.room}.json`)
-    var chat = fs.readFileSync(filePath, 'utf8')
-    var logs = JSON.parse(chat);
-    obj.msg = `[admin@${obj.room}]: ${obj.user} has joined the chat`
-    logs.push(obj.msg)
-    const buffer = Buffer.from(JSON.stringify(logs));
-    fs.writeFile(filePath, buffer, (err) => {
-        if (err) throw err;
-        console.log(`Chat saved`);
-    });
-    obj.log = logs
-    return obj
+function read(data) {
+    var looc = locl(pot.loactions_db.user_loc, data.user, data.user)
+    var file = path.join(__dirname, looc.file)
+    var user = fs.readFileSync(file)
+    return user
 }
 
-const filterWords = pot.filter
-const filterRegex = new RegExp(filterWords.join('|'), 'gi');
-
-const MAX_MESSAGES_PER_SECOND = 5;
-const messageCountMap = new Map();
-module.exports.msgs = function (location, data, id) {
-    const directoryPath = path.join(__dirname, `../battle_64/${location}/${id}`)
-    const user = fs.readdirSync(directoryPath)[0].split(".")[0]
-    var filePath = path.join(__dirname, `../battle_64/${location}/${id}/${user}.json`)
-    var file = fs.readFileSync(filePath, 'utf8')
-    var obj = JSON.parse(file);
-    var gate = Date.now() - obj.session
-    if (gate > 1000000) return `[admin@${obj.room}]: Please login to continue`
-    var rate = isRateLimited(obj.user)
-    if (rate) return `[admin@${obj.room}]: You are sending msgs to quick`
-    var filter = filterText(data);
-    obj.msg = `[${obj.user}@${obj.room}]: ${filter}`
-    filePath = path.join(__dirname, `../battle_64/${pot.loactions_db.chat_loc}/${obj.room}.json`)
-    var chat = fs.readFileSync(filePath, 'utf8')
-    var logs = JSON.parse(chat);
-    logs.push(obj.msg)
-    const buffer = Buffer.from(JSON.stringify(logs));
-    fs.writeFile(filePath, buffer, (err) => {
-        if (err) throw err;
-        console.log(`Chat saved`);
-    });
-    return obj
+function write(data) {
+    var looc = locl(pot.loactions_db.user_loc, data.user, data.user)
+    var file = path.join(__dirname, looc.file)
+    fs.writeFileSync(file, Buffer.from(JSON.stringify(data)))
 }
 
-function isRateLimited(userId) {
-  const messageCountObj = messageCountMap.get(userId) || { count: 0, lastMessageTime: 0 };
-  const { count, lastMessageTime } = messageCountObj;
-  const now = Date.now();
-  if (count >= MAX_MESSAGES_PER_SECOND * (now - lastMessageTime) / 1000) {
-    return true;
-  }
-  messageCountMap.set(userId, { count: count + 1, lastMessageTime: now });
-  return false;
+function locl(loc, loc2, loc3) {
+    var tmp = {}
+    if (loc3) {
+        tmp.file = `../battle_64/${loc}/${loc2}/${loc3}.json`
+    }
+    tmp.chat = `../battle_64/${loc}/${loc2}.json`
+    tmp.dir = `../battle_64/${loc}/${loc2}/`
+    return tmp
 }
 
-function filterText(text) {
-    return text.replace(filterRegex, '****');
+function userp(data, id) {
+    var profile = {
+        user: data.user,
+        pass: data.pass,
+        room: pot.static.room,
+        session: Date.now(),
+    }
+    var looc = locl(pot.loactions_db.user_loc, data.user, data.user)
+    var dir = path.join(__dirname, looc.dir)
+    if (!fs.existsSync(dir)) {
+        fs.mkdirSync(dir)
+        profile.pass = id
+        return profile
+    }
+    var file = path.join(__dirname, looc.file)
+    fs.writeFileSync(file, Buffer.from(JSON.stringify(profile)))
+    return profile
 }

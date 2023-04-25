@@ -8,16 +8,26 @@ const myButton = document.getElementById("myButton");
 
 myButton.addEventListener("click", (e) => {
     e.preventDefault()
-    socket.emit("chatmsg", input.value)
+    var use = sessionStorage.getItem("User")
+    var bridge = {}
+    bridge.use = use
+    bridge.msg = input.value
+    if (input.value.charAt(0) !== "@") socket.emit("chatmsg", bridge)
+    if (input.value.charAt(0) === "@") socket.emit("cmd", bridge)
     input.value = "";
     return
 });
+
+socket.on("gate", data => {
+    sessionStorage.setItem("User", data)
+    window.location.href = "/home"
+})
 
 socket.on("msg", data => {
     const li = document.createElement("li");
     li.innerHTML = data;
     messages.appendChild(li);
-    messages.lastChild.scrollIntoView({ behavior: 'smooth', block: 'end'})
+    messages.lastChild.scrollIntoView({ behavior: 'smooth'})
 })
 
 socket.on("chatf", data => {
@@ -30,7 +40,8 @@ socket.on("chatf", data => {
 })
 
 socket.on('connect', data => {
-    socket.emit("session")
+    var tmp = sessionStorage.getItem("User")
+    socket.emit("session", tmp)
 })
 
 function openNav() {

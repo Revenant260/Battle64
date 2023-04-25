@@ -1,11 +1,11 @@
 body {
     display: grid;
     grid-template-areas:
-        "header header header"
-        "nav article ads"
-        "footer footer footer";
-    grid-template-rows: 140px 1fr 40px;
-    grid-template-columns: 0% 1fr 26%;
+        "header header  header"
+        "nav  article ads   "
+        "footer footer  footer";
+    grid-template-rows: 140px 1fr 0px;
+    grid-template-columns: 0% 75% 26%;
     grid-gap: 2px;
     height: 100vh;
     margin: 0;
@@ -32,6 +32,7 @@ body {
 
 #siteAds {
     grid-area: ads;
+    overflow-y: scroll;
 }
 
 header,
@@ -42,9 +43,3 @@ div {
     background: rgb(0, 0, 0);
 }
 
-@media screen and (max-height: 900px) {
-    body {
-        grid-template-rows: 140px 1fr 0px;
-        grid-template-columns: 0% 1fr 0%;
-    }
-}

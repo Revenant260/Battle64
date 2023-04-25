@@ -7,11 +7,11 @@ form.ms {
     position: fixed;
     bottom: 0;
     left: 0;
-    width: 100%;
+    width: 75%;
     display: flex;
     box-sizing: border-box;
     padding: 0.25rem;
-}
+  }
 
 form.ms input {
     border: 0;
@@ -122,14 +122,13 @@ li.navt h1 {
 
 /* The button used to open the sidebar */
 .openbtn {
-    font-size: 20px;
+    font-size: 16px;
     cursor: pointer;
     background-color: #111;
     color: white;
-    padding: 10px 15px;
-    border: none;
     float: right;
-}
+    margin-right: 2%;
+  }
 
 .openbtn:hover {
     background-color: #444;
@@ -154,4 +153,29 @@ li.navt h1 {
 .chathistory li {
     padding: 0.5rem;
     background: #838383;
+}
+
+@media screen and (max-height: 900px) {
+    body {
+        grid-template-rows: 140px 1fr 0px;
+        grid-template-columns: 0% 99% 0%;
+    }
+
+    #mainArticle {
+        grid-area: article;
+        overflow-y: scroll;
+        border-block-width: 63px;
+        position: relative;
+        margin-top: 23px;
+    }
+    form.ms {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 99%;
+        display: flex;
+        box-sizing: border-box;
+        padding: 0.25rem;
+      }
+
 }

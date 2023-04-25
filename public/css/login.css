@@ -45,10 +45,10 @@ div {
 .form-container {
     display: inline-grid;
     text-align: center;
-    width: 30%;
-    margin-left: 35%;
-    margin-top: 8%;
-}
+    width: 34%;
+    margin-left: 33%;
+    margin-top: 9%;
+  }
 
 /* Full-width input fields */
 .form-container input[type=text],
@@ -96,7 +96,8 @@ div {
 .form-container h1 {
     display: grid;
     text-align: center;
-}
+    font-size: 65px;
+  }
 @media screen and (max-height: 900px) {
 
     .openbtn {
@@ -104,9 +105,12 @@ div {
     }
 
     .form-container {
-        right: 107px;
-        width: 50%;
-    }
+        display: inline-grid;
+        text-align: center;
+        width: 82%;
+        margin-left: 10%;
+        margin-top: 11%;
+      }
 }
 
 @media screen and (max-height: 900px) {
