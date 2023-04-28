@@ -1,17 +1,15 @@
-body {
-    margin: 0;
-    font-family: sans-serif;
-}
 
 form.ms {
     position: fixed;
     bottom: 0;
     left: 0;
-    width: 75%;
+    width: 100%;
     display: flex;
     box-sizing: border-box;
-    padding: 0.25rem;
-  }
+    background: transparent;
+    border: none;
+    font-size: 12px;
+}
 
 form.ms input {
     border: 0;
@@ -19,46 +17,52 @@ form.ms input {
     width: 100%;
     outline: 0;
     margin-right: 0.5rem;
-    border-radius: 0.25rem;
-    background: #ccc;
+    border-radius: 0.40rem;
+    color: white;
+    background-color: transparent;
 }
 
 form.ms button {
     width: 6rem;
-    background-color: #1b8c00;
+    background-color: #7132b9;
     color: white;
     border: none;
     padding: 0.5rem;
     cursor: pointer;
     border-radius: 0.25rem;
     text-transform: uppercase;
+    font-size: medium;
 }
 
 form.ms button:hover {
-    background-color: #166d01;
+    background-color: #000000;
 }
 
 .messages {
     list-style: none;
-    margin: 0;
-    padding: 0;
     margin-bottom: 3rem;
+    background-color: black;
+    padding-left: 0;
+    padding-top: 0;
+    margin-top: 0;
 }
 
 .messages li {
     padding: 0.5rem;
-    background: #838383;
+    background: #7132b9;
+    color:#000000;
 }
 
 .messages li:nth-child(odd) {
-    background: #525252;
+    background: #000000;
+    color:#7132b9;
 }
 
 ul.nav {
     list-style-type: none;
     padding: 0;
     overflow: hidden;
-    background-color: #333;
+    background-color: #000000b9;
     margin: auto;
     width: 100%;
 }
@@ -84,61 +88,11 @@ li.nav a:hover {
 
 li.navt h1 {
     display: block;
-    color: white;
+    color: #ffffffb9;
     text-align: center;
     text-decoration: none;
-    background-color: black;
-}
-
-/* The sidebar menu */
-.sidebar {
-    height: 100%;
-    width: 0%;
-    position: fixed;
-    top: 0;
-    right: 0;
-    background-color: #111;
-    overflow-x: hidden;
-    padding-top: 60px;
-    transition: 0.5s;
-    padding: 0;
-    z-index: 2;
-}
-
-/* The sidebar links */
-.sidebar a {
-    padding: 8px 8px 8px 32px;
-    text-decoration: none;
-    font-size: 25px;
-    color: #818181;
-    display: block;
-    transition: 0.3s;
-}
-
-/* When you mouse over the navigation links, change their color */
-.sidebar a:hover {
-    color: #f1f1f1;
-}
-
-/* The button used to open the sidebar */
-.openbtn {
-    font-size: 16px;
-    cursor: pointer;
-    background-color: #111;
-    color: white;
-    float: right;
-    margin-right: 2%;
-  }
-
-.openbtn:hover {
-    background-color: #444;
-}
-
-/* Style page content - use this if you want to push the page content to the right when you open the side navigation */
-#main {
-    transition: margin-right .5s;
-    /* If you want a transition effect */
-    padding: 20px;
+    background-color: #616161b9;
+    font-size: xx-large;
 }
 
 .chathistory {
@@ -166,7 +120,6 @@ li.navt h1 {
         overflow-y: scroll;
         border-block-width: 63px;
         position: relative;
-        margin-top: 23px;
     }
     form.ms {
         position: fixed;
@@ -177,5 +130,8 @@ li.navt h1 {
         box-sizing: border-box;
         padding: 0.25rem;
       }
+      form.ms button {
+        display: none;
+    }
 
 }

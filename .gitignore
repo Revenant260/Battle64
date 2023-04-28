@@ -125,4 +125,4 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
-storage/battle_64/
+storage/js/battle_64/

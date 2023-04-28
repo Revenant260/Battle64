@@ -2,14 +2,20 @@ body {
     display: grid;
     grid-template-areas:
         "header header  header"
-        "nav  article ads   "
-        "footer footer  footer";
-    grid-template-rows: 140px 1fr 0px;
-    grid-template-columns: 0% 75% 26%;
-    grid-gap: 2px;
-    height: 100vh;
+        "nav   article  ads   "
+        "footer footer footer ";
+    grid-template-rows: 135px 99% 0px;
+    grid-template-columns: 0% 100% 0%;
+    grid-gap: 0px;
+    height: 100%;
+    color: rgb(0, 0, 0);
     margin: 0;
-    color: white;
+    font-family: sans-serif;
+    font-size: 20px;
+}
+
+html {
+    background-color: black;
 }
 
 #pageHeader {
@@ -28,6 +34,10 @@ body {
 
 #mainNav {
     grid-area: nav;
+    display: flex;
+    position: fixed;
+    width: 100%;
+    z-index: 10;
 }
 
 #siteAds {
@@ -42,4 +52,3 @@ nav,
 div {
     background: rgb(0, 0, 0);
 }
-

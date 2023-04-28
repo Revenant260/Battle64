@@ -10,10 +10,9 @@ const path = require('path');
 const db = require('./storage/js/db')
 const pot = require('./storage/vars/index.json')
 const maxMessageLength = 200;
-const MAX_MESSAGES_PER_SECOND = 10;
+const MAX_MESSAGES_PER_SECOND = 15;
 const messageCountMap = new Map();
-const filterWords = pot.filter
-const filterRegex = new RegExp(filterWords.join('|'), 'gi');
+const delay = 30 * 60 * 1000;
 
 app.use('/', express.static(path.join(__dirname, 'public')))
 
@@ -41,32 +40,35 @@ io.on("connection", (socket) => {
     socket.on('chatmsg', function (data) {
         if (!data) return
         if (!spamFilter(data)) return socket.emit("msg", `admin@system: Max 200 characters`)
-        if (isRateLimited(socket.handshake.address)) return socket.emit("msg", `admin@system: Please slow down`)
+        if (isRateLimited(socket.handshake.address.split("f:")[1])) return socket.emit("msg", `admin@system: Please slow down`)
         var rte = db.msgs(data, socket.handshake.address.split("f:")[1])
-        io.to(rte.room).emit("msg", filterText(rte.msg))
+        if (!rte) return
+        io.to(rte.room).emit("msg", rte.msg)
     })
 
     socket.on('login', function (data) {
         var rte = db.login(data, socket.handshake.address.split("f:")[1])
-        socket.emit("gate", rte)
+        socket.emit("gate", JSON.stringify(rte))
     });
-    socket.on("session", function (data) {
-        var rte = db.session(data, socket.handshake.address.split("f:")[1])
-        if (rte === "Failed login") return socket.emit("msg", `admin@system: Please Login to continue`)
+
+    socket.on('session', function (data) {
+        var rte = db.active(data, socket.handshake.address.split("f:")[1])
+        if (!rte) return
         socket.leaveAll()
         socket.join(rte.room)
         socket.emit("chatf", rte.log)
-        io.to(rte.room).emit("msg", rte.msg)
-    })
+        socket.emit("msg", `Welcome ${rte.user}`)
+    });
+
     socket.on("cmd", function (data) {
-        if (!spamFilter(data)) return
-        var cmds = data.msg.split(" ")
+        if (!spamFilter(data)) return socket.emit("msg", `admin@system: Max 200 characters`)
+        if (isRateLimited(socket.handshake.address)) return socket.emit("msg", `admin@system: Please slow down`)
     })
 })
 
-function filterText(text) {
-    return text.replace(filterRegex, '****');
-}
+http.listen(port, function () {
+    console.log("Listening on *:" + port);
+});
 
 function isRateLimited(userId) {
     const messageCountObj = messageCountMap.get(userId) || { count: 0, lastMessageTime: 0 };
@@ -79,14 +81,11 @@ function isRateLimited(userId) {
     return false;
 }
 function spamFilter(message) {
-  if (message.length > maxMessageLength) {
-    return false;
-  }
-  return true
+    if (message.length > maxMessageLength) {
+        return false;
+    }
+    return true
 }
-http.listen(port, function () {
-    console.log("Listening on *:" + port);
-});
 
 // pm2 start index.js -i 2 --max-memory-restart 250M --watch
 // pm2 restart id --name newName

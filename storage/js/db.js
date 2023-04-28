@@ -1,88 +1,73 @@
 const fs = require('fs');
-const fsPromises = require('fs').promises
 const pot = require('../vars/index.json')
 const path = require('path');
 const active = []
+const filterWords = pot.filter
+const filterRegex = new RegExp(filterWords.join('|'), 'gi');
+
+var crypto = require('crypto');
 
 module.exports.login = function (data, id) {
-    var user = userp(data, id)
-    active.push(user.session)
-    var bridge = JSON.stringify(user)
-    return bridge
-}
-
-module.exports.session = function (data, id) {
-    var user = JSON.parse(data)
-    if (!active.includes(user.session)) return "Failed login"
-    user.msg = `admin@${user.room}: Welcome ${user.user}`
-    var log = chats(user)
-    user.log = log
+    var user = profile(data, id)
+    var use = files(loc(id).user, user)
+    if (!use) return
+    if (use.pass !== user.pass) return
+    if (use.user !== user.user) return
+    delete user.pass
+    delete user.id
+    user.session = generate_key()
+    active[id] = user.session
+    console.log(active)
     return user
 }
-
+module.exports.active = function (data, id) {
+    console.log(JSON.parse(data))
+    if (!active[id]) return
+    var use = files(loc(id).user, JSON.parse(data).id)
+    var chat = files(loc(use.room).chat, [`Welcome to ${use.room}`])
+    if (chat) {
+        use.log = chat
+    }
+    return use
+}
 module.exports.msgs = function (data, id) {
+    if (!active[id]) return
     var user = JSON.parse(data.use)
-    user.msg = `${user.user}@${user.room}: ${data.msg}`
-    var log = chats(user)
+    user.msg = `${user.user}@${user.room}: ${filterText(data.msg)}`
+    const datas = fs.readFileSync(loc(user.room).chat, 'utf8');
+    var logs = JSON.parse(datas)
+    logs.push(user.msg)
+    fs.writeFileSync(loc(user.room).chat, JSON.stringify(logs) ,'utf8')
     return user
 }
-
-
-function chats(data) {
-    var looc = locl(pot.loactions_db.chat_loc, data.room)
-    var dir = path.join(__dirname, looc.chat)
-    if (!fs.existsSync(dir)) {
-        var file = path.join(__dirname, looc.chat)
-        fs.writeFileSync(file, Buffer.from(JSON.stringify([])))
-        return
-    }
-    var file = path.join(__dirname, looc.chat)
-    var log = fs.readFileSync(file)
-    var logs = JSON.parse(log)
-    logs.push(data.msg)
-    var file = path.join(__dirname, looc.chat)
-    fs.writeFileSync(file, Buffer.from(JSON.stringify(logs)))
-    return logs
-}
-
-function read(data) {
-    var looc = locl(pot.loactions_db.user_loc, data.user, data.user)
-    var file = path.join(__dirname, looc.file)
-    var user = fs.readFileSync(file)
-    return user
-}
-
-function write(data) {
-    var looc = locl(pot.loactions_db.user_loc, data.user, data.user)
-    var file = path.join(__dirname, looc.file)
-    fs.writeFileSync(file, Buffer.from(JSON.stringify(data)))
-}
-
-function locl(loc, loc2, loc3) {
-    var tmp = {}
-    if (loc3) {
-        tmp.file = `../battle_64/${loc}/${loc2}/${loc3}.json`
-    }
-    tmp.chat = `../battle_64/${loc}/${loc2}.json`
-    tmp.dir = `../battle_64/${loc}/${loc2}/`
-    return tmp
-}
-
-function userp(data, id) {
-    var profile = {
-        user: data.user,
-        pass: data.pass,
-        room: pot.static.room,
-        session: Date.now(),
-    }
-    var looc = locl(pot.loactions_db.user_loc, data.user, data.user)
-    var dir = path.join(__dirname, looc.dir)
-    if (!fs.existsSync(dir)) {
-        fs.mkdirSync(dir)
-        profile.pass = id
-        return profile
-    }
-    var file = path.join(__dirname, looc.file)
-    fs.writeFileSync(file, Buffer.from(JSON.stringify(profile)))
+var profile = function (data, id) {
+    var profile = {}
+    profile.user = data.user
+    profile.pass = crypto.createHmac('sha256', data.pass).digest("base64url")
+    profile.room = pot.static.room
+    profile.id = id
     return profile
+}
+var generate_key = function () {
+    return crypto.randomBytes(16).toString('base64');
+};
+function filterText(text) {
+    return text.replace(filterRegex, '****');
+}
+var files = function (data, res) {
+    try {
+        const datas = fs.readFileSync(data, 'utf8');
+        return JSON.parse(datas)
+    } catch (err) {
+        fs.writeFileSync(data, JSON.stringify(res), "utf8")
+    }
+}
+
+var loc = function (loc) {
+    var tmp = {}
+    tmp.user = path.join(__dirname + `/battle_64/${pot.loactions_db.user_loc}/${loc}.json`)
+    tmp.chat = path.join(__dirname + `/battle_64/${pot.loactions_db.chat_loc}/${loc}.json`)
+    tmp.cdir = path.join(__dirname + `/battle_64/${pot.loactions_db.chat_loc}/`)
+    tmp.udir = path.join(__dirname + `/battle_64/${pot.loactions_db.user_loc}/`)
+    return tmp
 }
