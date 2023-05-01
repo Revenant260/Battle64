@@ -8,7 +8,7 @@ form.ms {
     box-sizing: border-box;
     background: transparent;
     border: none;
-    font-size: 12px;
+    color: aliceblue;
 }
 
 form.ms input {

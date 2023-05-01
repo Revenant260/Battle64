@@ -28,6 +28,7 @@ socket.on("msg", data => {
 })
 
 socket.on("chatf", data => {
+    if (data === null) return
     messages.innerHTML = ""
     data.forEach(ele => {
         const li = document.createElement("li");

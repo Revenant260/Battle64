@@ -12,7 +12,6 @@ const pot = require('./storage/vars/index.json')
 const maxMessageLength = 200;
 const MAX_MESSAGES_PER_SECOND = 15;
 const messageCountMap = new Map();
-const delay = 30 * 60 * 1000;
 
 app.use('/', express.static(path.join(__dirname, 'public')))
 
@@ -41,29 +40,32 @@ io.on("connection", (socket) => {
         if (!data) return
         if (!spamFilter(data)) return socket.emit("msg", `admin@system: Max 200 characters`)
         if (isRateLimited(socket.handshake.address.split("f:")[1])) return socket.emit("msg", `admin@system: Please slow down`)
+        if (!data.msg) return
         var rte = db.msgs(data, socket.handshake.address.split("f:")[1])
-        if (!rte) return
+        if (rte === "Fail") return
         io.to(rte.room).emit("msg", rte.msg)
+        if (rte.trk) {
+            socket.emit("msg", rte.trk)
+        }
+        if (rte.cmd) {
+            socket.emit("msg", rte.cmd)
+        }
     })
 
     socket.on('login', function (data) {
         var rte = db.login(data, socket.handshake.address.split("f:")[1])
+        if (rte === "Fail") return
         socket.emit("gate", JSON.stringify(rte))
     });
 
     socket.on('session', function (data) {
         var rte = db.active(data, socket.handshake.address.split("f:")[1])
-        if (!rte) return
+        if (rte === "Fail") return
         socket.leaveAll()
         socket.join(rte.room)
         socket.emit("chatf", rte.log)
         socket.emit("msg", `Welcome ${rte.user}`)
     });
-
-    socket.on("cmd", function (data) {
-        if (!spamFilter(data)) return socket.emit("msg", `admin@system: Max 200 characters`)
-        if (isRateLimited(socket.handshake.address)) return socket.emit("msg", `admin@system: Please slow down`)
-    })
 })
 
 http.listen(port, function () {

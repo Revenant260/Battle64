@@ -1,0 +1,11 @@
+{
+  "watch": ["public"],
+  "ignore_watch" : ["node_modules", "storage"],
+  "watch_delay": 1000,
+  "max-memory-restart": "250M",
+  "name": "Battle64",
+  "script": "index.js",
+  "watch_options": {
+    "followSymlinks": false
+  }
+}

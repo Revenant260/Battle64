@@ -1,14 +1,12 @@
 {
   "loactions_db": {
     "user_loc": "users",
-    "chat_loc": "chats"
+    "chat_loc": "chats",
+    "oc_loc": "oc"
   },
   "static": {
     "room": "shadowlands",
     "login_rte": "return"
-  },
-  "routes_user": {
-    "login": "user"
   },
   "auto_mod": {
     "welcome": "Welcome to Battle64 beta",
