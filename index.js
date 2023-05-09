@@ -48,6 +48,7 @@ io.on("connection", (socket) => {
             socket.emit("msg", rte.trk)
         }
         if (rte.cmd) {
+            if (Array.isArray(rte.cmd)) return socket.emit("chats", rte.cmd)
             socket.emit("msg", rte.cmd)
         }
     })

@@ -36,6 +36,20 @@ socket.on("chatf", data => {
         messages.appendChild(li);
     });
 })
+socket.on("chats", data => {
+    if (data === null) return
+    var index = 0
+    const lis = document.createElement("li")
+    data.forEach(ele => {
+        index += 1
+        messages.appendChild(lis);
+        setTimeout(() => {
+            lis.innerHTML = ""
+            lis.innerHTML = ele.toString()
+            messages.lastChild.scrollIntoView({ behavior: 'smooth' })
+        }, index * 1000)
+    });
+})
 
 socket.on('connect', data => {
     var tmp = sessionStorage.getItem("User")
